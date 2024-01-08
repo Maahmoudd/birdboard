@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Database\Factories\ProjectFactory;
-use Faker\Factory;
+use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -26,6 +26,15 @@ class ProjectsTest extends TestCase
         $this->assertDatabaseHas('projects', $attributes);
 
         $this->get('/projects')->assertSee($attributes['title']);
+    }
+
+    public function test_a_user_can_view_a_project()
+    {
+        $project = Project::factory()->create(); // Using the updated factory syntax
+
+        $this->get('/projects/' . $project->id)
+            ->assertSee($project->title)
+            ->assertSee($project->description);
     }
 
     public function test_a_project_requires_a_title()
